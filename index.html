@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Simulador de Comunicación de Datos
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/styles.css"
+    >
+
+</head>
+
+
+<body>
+
+    <header>
+
+        <h1>
+            Simulador de Comunicación de Datos
+        </h1>
+
+        <p>
+            Simulación de transmisión de información mediante paquetes
+        </p>
+
+    </header>
+
+
+    <main>
+
+        <!-- ==================================================
+             CONFIGURACIÓN
+        =================================================== -->
+
+        <section class="panel">
+
+            <h2>Configuración de transmisión</h2>
+
+
+            <div class="form-grid">
+
+                <div class="campo">
+
+                    <label for="mensaje">
+                        Mensaje
+                    </label>
+
+                    <textarea
+                        id="mensaje"
+                        rows="4"
+                        placeholder="Escribí el mensaje a transmitir..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label for="tamañoPaquete">
+                        Tamaño del paquete (bits)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="tamañoPaquete"
+                        value="8"
+                        min="1"
+                    >
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label for="perdida">
+                        Pérdida de paquetes (%)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="perdida"
+                        value="10"
+                        min="0"
+                        max="100"
+                    >
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label for="ruido">
+                        Ruido (%)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="ruido"
+                        value="5"
+                        min="0"
+                        max="100"
+                    >
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label for="latencia">
+                        Latencia (ms)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="latencia"
+                        value="100"
+                        min="0"
+                >
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label for="modulacion">
+                        Modulación
+                    </label>
+
+                    <select id="modulacion">
+
+                        <option value="ASK">
+                            ASK
+                        </option>
+
+                        <option value="FSK">
+                            FSK
+                        </option>
+
+                        <option value="PSK">
+                            PSK
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <button
+                id="btnSimular"
+                class="btn-principal"
+            >
+                ▶ Iniciar simulación
+            </button>
+
+        </section>
+
+
+        <!-- ==================================================
+             TRANSMISIÓN
+        =================================================== -->
+
+        <section class="panel">
+
+            <h2>Transmisión</h2>
+
+
+            <div class="transmision">
+
+                <div class="nodo">
+
+                    <span class="icono">
+                        📤
+                    </span>
+
+                    <strong>
+                        EMISOR
+                    </strong>
+
+                    <span id="mensajeEmisor">
+                        —
+                    </span>
+
+                </div>
+
+
+                <div class="flecha">
+                    →
+                </div>
+
+
+                <div class="nodo">
+
+                    <span class="icono">
+                        📡
+                    </span>
+
+                    <strong>
+                        CANAL
+                    </strong>
+
+                    <span>
+                        Simulación
+                    </span>
+
+                </div>
+
+
+                <div class="flecha">
+                    →
+                </div>
+
+
+                <div class="nodo">
+
+                    <span class="icono">
+                        📥
+                    </span>
+
+                    <strong>
+                        RECEPTOR
+                    </strong>
+
+                    <span id="mensajeReceptor">
+                        —
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             PAQUETES
+        =================================================== -->
+
+        <section class="panel">
+
+            <h2>
+                Paquetes transmitidos
+            </h2>
+
+
+            <div class="tabla-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Secuencia</th>
+
+                            <th>Datos</th>
+
+                            <th>Tamaño</th>
+
+                            <th>Estado</th>
+
+                            <th>Error</th>
+
+                            <th>Latencia</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="tablaPaquetes">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             MÉTRICAS
+        =================================================== -->
+
+        <section class="panel">
+
+            <h2>
+                Resultados
+            </h2>
+
+
+            <div class="metricas-grid">
+
+                <div class="metrica">
+
+                    <span>
+                        Enviados
+                    </span>
+
+                    <strong id="mEnviados">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="metrica">
+
+                    <span>
+                        Recibidos
+                    </span>
+
+                    <strong id="mRecibidos">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="metrica">
+
+                    <span>
+                        Perdidos
+                    </span>
+
+                    <strong id="mPerdidos">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="metrica">
+
+                    <span>
+                        Errores
+                    </span>
+
+                    <strong id="mErrores">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="metrica">
+
+                    <span>
+                        BER
+                    </span>
+
+                    <strong id="mBer">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="metrica">
+
+                    <span>
+                        Latencia promedio
+                    </span>
+
+                    <strong id="mLatencia">
+                        0 ms
+                    </strong>
+
+                </div>
+
+
+                <div class="metrica">
+
+                    <span>
+                        Eficiencia
+                    </span>
+
+                    <strong id="mEficiencia">
+                        0 %
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             RECOMENDACIÓN
+        =================================================== -->
+
+        <section class="panel">
+
+            <h2>
+                🧠 Recomendación del sistema
+            </h2>
+
+            <div id="recomendacion">
+
+                Ejecutá una simulación para obtener una recomendación.
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            Simulador de Comunicación de Datos — Proyecto académico
+        </p>
+
+    </footer>
+
+
+    <!-- ======================================================
+         JAVASCRIPT
+    ======================================================= -->
+
+    <script src="js/packets.js"></script>
+
+    <script src="js/channel.js"></script>
+
+    <script src="js/errors.js"></script>
+
+    <script src="js/modulation.js"></script>
+
+    <script src="js/metrics.js"></script>
+
+    <script src="js/intelligent.js"></script>
+
+    <script src="js/main.js"></script>
+
+</body>
+
+</html>
