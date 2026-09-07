@@ -1,0 +1,402 @@
+/* ============================================================
+   styles.css
+   Estilos generales del simulador.
+   ============================================================ */
+
+
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+
+    margin: 0;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background-color: #f4f6f8;
+
+    color: #202124;
+}
+
+
+header {
+
+    background-color: #1f2937;
+
+    color: white;
+
+    text-align: center;
+
+    padding: 30px 20px;
+}
+
+
+header h1 {
+
+    margin: 0 0 10px;
+
+    font-size: 32px;
+}
+
+
+header p {
+
+    margin: 0;
+
+    opacity: 0.85;
+}
+
+
+main {
+
+    width: 90%;
+
+    max-width: 1200px;
+
+    margin: 30px auto;
+}
+
+
+.panel {
+
+    background-color: white;
+
+    border-radius: 10px;
+
+    padding: 25px;
+
+    margin-bottom: 25px;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+
+.panel h2 {
+
+    margin-top: 0;
+
+    margin-bottom: 20px;
+}
+
+
+/* ============================================================
+   FORMULARIO
+   ============================================================ */
+
+
+.form-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 20px;
+}
+
+
+.campo {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+.campo label {
+
+    font-weight: bold;
+}
+
+
+.campo input,
+.campo textarea,
+.campo select {
+
+    padding: 10px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 6px;
+
+    font-size: 15px;
+
+    font-family: inherit;
+}
+
+
+.campo textarea {
+
+    resize: vertical;
+}
+
+
+.btn-principal {
+
+    margin-top: 25px;
+
+    width: 100%;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background-color: #2563eb;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+.btn-principal:hover {
+
+    background-color: #1d4ed8;
+}
+
+
+/* ============================================================
+   TRANSMISIÓN
+   ============================================================ */
+
+
+.transmision {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+
+.nodo {
+
+    flex: 1;
+
+    min-height: 130px;
+
+    border: 2px solid #cbd5e1;
+
+    border-radius: 10px;
+
+    padding: 20px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    text-align: center;
+}
+
+
+.icono {
+
+    font-size: 30px;
+}
+
+
+.flecha {
+
+    font-size: 30px;
+
+    font-weight: bold;
+}
+
+
+/* ============================================================
+   TABLA
+   ============================================================ */
+
+
+.tabla-container {
+
+    overflow-x: auto;
+}
+
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+
+th,
+td {
+
+    padding: 12px;
+
+    text-align: center;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+th {
+
+    background-color: #f1f5f9;
+
+    font-weight: bold;
+}
+
+
+/* ============================================================
+   MÉTRICAS
+   ============================================================ */
+
+
+.metricas-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 15px;
+}
+
+
+.metrica {
+
+    padding: 20px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 8px;
+
+    text-align: center;
+}
+
+
+.metrica span {
+
+    display: block;
+
+    font-size: 14px;
+
+    margin-bottom: 10px;
+
+    color: #64748b;
+}
+
+
+.metrica strong {
+
+    font-size: 24px;
+}
+
+
+/* ============================================================
+   RECOMENDACIÓN
+   ============================================================ */
+
+
+#recomendacion {
+
+    padding: 15px;
+
+    border-radius: 8px;
+
+    background-color: #eff6ff;
+
+    line-height: 1.6;
+}
+
+
+.recomendacion-item {
+
+    margin-bottom: 8px;
+}
+
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+
+footer {
+
+    text-align: center;
+
+    padding: 25px;
+
+    color: #64748b;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+
+@media (max-width: 800px) {
+
+    .form-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .transmision {
+
+        flex-direction: column;
+    }
+
+
+    .flecha {
+
+        transform: rotate(90deg);
+    }
+
+
+    .metricas-grid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+}
+
+
+@media (max-width: 500px) {
+
+    main {
+
+        width: 95%;
+    }
+
+
+    .metricas-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    header h1 {
+
+        font-size: 25px;
+    }
+}
