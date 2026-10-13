@@ -3,400 +3,214 @@
    Estilos generales del simulador.
    ============================================================ */
 
-
-* {
-    box-sizing: border-box;
-}
-
+* { box-sizing: border-box; }
 
 body {
-
     margin: 0;
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
+    font-family: Arial, Helvetica, sans-serif;
     background-color: #f4f6f8;
-
     color: #202124;
 }
 
-
 header {
-
     background-color: #1f2937;
-
     color: white;
-
     text-align: center;
-
     padding: 30px 20px;
 }
 
+header h1 { margin: 0 0 10px; font-size: 32px; }
+header p { margin: 0; opacity: 0.85; }
 
-header h1 {
-
-    margin: 0 0 10px;
-
-    font-size: 32px;
-}
-
-
-header p {
-
-    margin: 0;
-
-    opacity: 0.85;
-}
-
-
-main {
-
-    width: 90%;
-
-    max-width: 1200px;
-
-    margin: 30px auto;
-}
-
+main { width: 90%; max-width: 1200px; margin: 30px auto; }
 
 .panel {
-
     background-color: white;
-
     border-radius: 10px;
-
     padding: 25px;
-
     margin-bottom: 25px;
-
-    box-shadow:
-        0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
+.panel h2 { margin-top: 0; margin-bottom: 20px; }
+.panel h3 { margin: 20px 0 8px; }
 
-.panel h2 {
+.oculto { display: none !important; }
 
-    margin-top: 0;
+/* ============================================================
+   PESTAÑAS
+   ============================================================ */
 
-    margin-bottom: 20px;
+.tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+
+.tab {
+    padding: 12px 20px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #334155;
 }
 
+.tab.activa { background-color: #2563eb; border-color: #2563eb; color: white; }
 
 /* ============================================================
    FORMULARIO
    ============================================================ */
 
+.form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
 
-.form-grid {
+.campo { display: flex; flex-direction: column; gap: 8px; }
+.campo label { font-weight: bold; }
 
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, 1fr);
-
-    gap: 20px;
-}
-
-
-.campo {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 8px;
-}
-
-
-.campo label {
-
-    font-weight: bold;
-}
-
-
-.campo input,
-.campo textarea,
-.campo select {
-
+.campo input, .campo textarea, .campo select {
     padding: 10px;
-
     border: 1px solid #cbd5e1;
-
     border-radius: 6px;
-
     font-size: 15px;
-
     font-family: inherit;
 }
 
-
-.campo textarea {
-
-    resize: vertical;
-}
-
+.campo textarea { resize: vertical; }
 
 .btn-principal {
-
     margin-top: 25px;
-
     width: 100%;
-
     padding: 14px;
-
     border: none;
-
     border-radius: 7px;
-
     background-color: #2563eb;
-
     color: white;
-
     font-size: 16px;
-
     font-weight: bold;
-
     cursor: pointer;
 }
 
+.btn-principal:hover { background-color: #1d4ed8; }
+.btn-principal:disabled { background-color: #94a3b8; cursor: not-allowed; }
 
-.btn-principal:hover {
-
-    background-color: #1d4ed8;
+.btn-secundario {
+    margin-top: 15px;
+    padding: 12px 18px;
+    border: 2px solid #2563eb;
+    border-radius: 7px;
+    background: white;
+    color: #2563eb;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
+.btn-secundario:hover { background: #eff6ff; }
+.btn-secundario:disabled { border-color: #94a3b8; color: #94a3b8; cursor: not-allowed; }
+
+.botones-fila { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.botones-fila .btn-principal { width: auto; flex: 1; min-width: 220px; }
+
+.nota { font-size: 13px; color: #64748b; line-height: 1.5; }
 
 /* ============================================================
    TRANSMISIÓN
    ============================================================ */
 
-
-.transmision {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 20px;
-}
-
+.transmision { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 
 .nodo {
-
     flex: 1;
-
     min-height: 130px;
-
     border: 2px solid #cbd5e1;
-
     border-radius: 10px;
-
     padding: 20px;
-
     display: flex;
-
     flex-direction: column;
-
     align-items: center;
-
     justify-content: center;
-
     gap: 8px;
-
     text-align: center;
+    word-break: break-word;
 }
 
-
-.icono {
-
-    font-size: 30px;
-}
-
-
-.flecha {
-
-    font-size: 30px;
-
-    font-weight: bold;
-}
-
+.icono { font-size: 30px; }
+.flecha { font-size: 30px; font-weight: bold; }
 
 /* ============================================================
-   TABLA
+   SEÑALES (canvas)
    ============================================================ */
 
+.scroll-x { overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; }
+canvas { display: block; }
 
-.tabla-container {
+/* ============================================================
+   TABLAS
+   ============================================================ */
 
-    overflow-x: auto;
-}
+.tabla-container { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 12px; text-align: center; border-bottom: 1px solid #e5e7eb; }
+th { background-color: #f1f5f9; font-weight: bold; }
 
-
-table {
-
-    width: 100%;
-
-    border-collapse: collapse;
-}
-
-
-th,
-td {
-
-    padding: 12px;
-
-    text-align: center;
-
-    border-bottom: 1px solid #e5e7eb;
-}
-
-
-th {
-
-    background-color: #f1f5f9;
-
-    font-weight: bold;
-}
-
+.mono { font-family: "Courier New", monospace; word-break: break-all; }
 
 /* ============================================================
    MÉTRICAS
    ============================================================ */
 
+.metricas-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
 
-.metricas-grid {
+.metrica { padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center; }
+.metrica span { display: block; font-size: 14px; margin-bottom: 10px; color: #64748b; }
+.metrica strong { font-size: 22px; word-break: break-word; }
 
-    display: grid;
+/* ============================================================
+   RESULTADO CONTACTLESS
+   ============================================================ */
 
-    grid-template-columns:
-        repeat(4, 1fr);
+.resultado-linea { margin: 10px 0; line-height: 1.6; }
+.resultado-linea .etiqueta { font-weight: bold; display: inline-block; min-width: 160px; }
 
-    gap: 15px;
+.bits-caja {
+    font-family: "Courier New", monospace;
+    background: #f1f5f9;
+    padding: 10px 12px;
+    border-radius: 6px;
+    word-break: break-all;
+    line-height: 1.6;
 }
 
+.bit-error { color: #dc2626; font-weight: bold; background: #fee2e2; }
 
-.metrica {
-
-    padding: 20px;
-
-    border: 1px solid #e2e8f0;
-
-    border-radius: 8px;
-
-    text-align: center;
-}
-
-
-.metrica span {
-
-    display: block;
-
-    font-size: 14px;
-
-    margin-bottom: 10px;
-
-    color: #64748b;
-}
-
-
-.metrica strong {
-
-    font-size: 24px;
-}
-
+.estado-bien { color: #15803d; font-weight: bold; }
+.estado-mal { color: #b91c1c; font-weight: bold; }
+.estado-alerta { color: #b45309; font-weight: bold; }
 
 /* ============================================================
    RECOMENDACIÓN
    ============================================================ */
 
-
-#recomendacion {
-
-    padding: 15px;
-
-    border-radius: 8px;
-
-    background-color: #eff6ff;
-
-    line-height: 1.6;
-}
-
-
-.recomendacion-item {
-
-    margin-bottom: 8px;
-}
-
+#recomendacion { padding: 15px; border-radius: 8px; background-color: #eff6ff; line-height: 1.6; }
+.recomendacion-item { margin-bottom: 8px; }
 
 /* ============================================================
    FOOTER
    ============================================================ */
 
-
-footer {
-
-    text-align: center;
-
-    padding: 25px;
-
-    color: #64748b;
-}
-
+footer { text-align: center; padding: 25px; color: #64748b; }
 
 /* ============================================================
    RESPONSIVE
    ============================================================ */
 
-
 @media (max-width: 800px) {
-
-    .form-grid {
-
-        grid-template-columns: 1fr;
-    }
-
-
-    .transmision {
-
-        flex-direction: column;
-    }
-
-
-    .flecha {
-
-        transform: rotate(90deg);
-    }
-
-
-    .metricas-grid {
-
-        grid-template-columns:
-            repeat(2, 1fr);
-    }
+    .form-grid { grid-template-columns: 1fr; }
+    .transmision { flex-direction: column; }
+    .flecha { transform: rotate(90deg); }
+    .metricas-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-
 @media (max-width: 500px) {
-
-    main {
-
-        width: 95%;
-    }
-
-
-    .metricas-grid {
-
-        grid-template-columns: 1fr;
-    }
-
-
-    header h1 {
-
-        font-size: 25px;
-    }
+    main { width: 95%; }
+    .metricas-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 25px; }
 }
