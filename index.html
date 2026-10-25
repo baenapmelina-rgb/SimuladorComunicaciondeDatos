@@ -1,454 +1,356 @@
 <!DOCTYPE html>
 <html lang="es">
-
+ 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>
-        Simulador de Comunicación de Datos
-    </title>
-
-    <link
-        rel="stylesheet"
-        href="css/styles.css"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Comunicación de Datos</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
-
-
+ 
 <body>
-
+ 
     <header>
-
-        <h1>
-            Simulador de Comunicación de Datos
-        </h1>
-
-        <p>
-            Simulación de transmisión de información mediante paquetes
-        </p>
-
+        <h1>Simulador de Comunicación de Datos</h1>
+        <p>Transmisión por paquetes y comunicación contactless ISO/IEC 14443-A</p>
     </header>
-
-
+ 
     <main>
-
+ 
+        <div class="tabs">
+            <button id="tabGenerico" class="tab activa">Transmisión por paquetes</button>
+            <button id="tabContactless" class="tab">Contactless ISO/IEC 14443-A</button>
+        </div>
+ 
+ 
         <!-- ==================================================
-             CONFIGURACIÓN
+             MODO 1: TRANSMISIÓN GENÉRICA POR PAQUETES
         =================================================== -->
-
-        <section class="panel">
-
-            <h2>Configuración de transmisión</h2>
-
-
-            <div class="form-grid">
-
-                <div class="campo">
-
-                    <label for="mensaje">
-                        Mensaje
-                    </label>
-
-                    <textarea
-                        id="mensaje"
-                        rows="4"
-                        placeholder="Escribí el mensaje a transmitir..."
-                    ></textarea>
-
+ 
+        <div id="modoGenerico">
+ 
+            <section class="panel">
+                <h2>Configuración de transmisión</h2>
+ 
+                <div class="form-grid">
+ 
+                    <div class="campo">
+                        <label for="mensaje">Mensaje</label>
+                        <textarea id="mensaje" rows="4" placeholder="Escribí el mensaje a transmitir..."></textarea>
+                    </div>
+ 
+                    <div class="campo">
+                        <label for="tamañoPaquete">Tamaño del paquete (bits de datos)</label>
+                        <input type="number" id="tamañoPaquete" value="8" min="1">
+                    </div>
+ 
+                    <div class="campo">
+                        <label for="perdida">Pérdida de paquetes (%)</label>
+                        <input type="number" id="perdida" value="10" min="0" max="100">
+                    </div>
+ 
+                    <div class="campo">
+                        <label for="ruido">Ruido (% de la amplitud de la señal)</label>
+                        <input type="number" id="ruido" value="20" min="0" max="100">
+                    </div>
+ 
+                    <div class="campo">
+                        <label for="latencia">Latencia (ms)</label>
+                        <input type="number" id="latencia" value="100" min="0">
+                    </div>
+ 
+                    <div class="campo">
+                        <label for="modulacion">Modulación</label>
+                        <select id="modulacion">
+                            <option value="ASK">ASK</option>
+                            <option value="FSK">FSK</option>
+                            <option value="PSK">PSK</option>
+                        </select>
+                    </div>
+ 
+                    <div class="campo">
+                        <label for="control">Control de errores</label>
+                        <select id="control">
+                            <option value="ninguno">Ninguno</option>
+                            <option value="paridad">Paridad (1 bit)</option>
+                            <option value="checksum">Checksum (8 bits)</option>
+                            <option value="crc" selected>CRC-8 (8 bits)</option>
+                        </select>
+                    </div>
+ 
                 </div>
-
-
-                <div class="campo">
-
-                    <label for="tamañoPaquete">
-                        Tamaño del paquete (bits)
-                    </label>
-
-                    <input
-                        type="number"
-                        id="tamañoPaquete"
-                        value="8"
-                        min="1"
-                    >
-
+ 
+                <button id="btnSimular" class="btn-principal">▶ Iniciar simulación</button>
+            </section>
+ 
+            <section class="panel">
+                <h2>Señal modulada (primeros 16 bits)</h2>
+                <div class="scroll-x"><canvas id="canvasModulacion"></canvas></div>
+                <p class="nota">Ilustración de cómo cambia la portadora según la modulación elegida: ASK cambia la amplitud, FSK la frecuencia y PSK la fase.</p>
+            </section>
+ 
+            <section class="panel">
+                <h2>Transmisión</h2>
+ 
+                <div class="transmision">
+                    <div class="nodo">
+                        <span class="icono" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="12" width="22" height="15" rx="3"/><path d="M16 21V3m-6 6 6-6 6 6"/><path d="M10 17h3m6 0h3"/></svg></span>
+                        <strong>EMISOR</strong>
+                        <span id="mensajeEmisor">—</span>
+                    </div>
+ 
+                    <div class="flecha">→</div>
+ 
+                    <div class="nodo">
+                        <span class="icono" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="16" r="2.5"/><path d="M10 10a8.5 8.5 0 0 0 0 12m12-12a8.5 8.5 0 0 1 0 12M6 6a14 14 0 0 0 0 20m20-20a14 14 0 0 1 0 20"/><path d="M16 18.5v9"/></svg></span>
+                        <strong>CANAL</strong>
+                        <span>Simulación</span>
+                    </div>
+ 
+                    <div class="flecha">→</div>
+ 
+                    <div class="nodo">
+                        <span class="icono" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="22" height="22" rx="3"/><path d="M16 3v18m-6-6 6 6 6-6"/><path d="M10 10h3m6 0h3"/></svg></span>
+                        <strong>RECEPTOR</strong>
+                        <span id="mensajeReceptor">—</span>
+                    </div>
                 </div>
-
-
-                <div class="campo">
-
-                    <label for="perdida">
-                        Pérdida de paquetes (%)
-                    </label>
-
-                    <input
-                        type="number"
-                        id="perdida"
-                        value="10"
-                        min="0"
-                        max="100"
-                    >
-
+ 
+                <p class="nota">En el receptor, los paquetes perdidos o rechazados aparecen como "·" o caracteres inválidos.</p>
+            </section>
+ 
+            <section class="panel">
+                <h2>Paquetes transmitidos</h2>
+ 
+                <div class="tabla-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Secuencia</th>
+                                <th>Bits recibidos</th>
+                                <th>Bits de datos</th>
+                                <th>Estado</th>
+                                <th>Error detectado</th>
+                                <th>Bits alterados</th>
+                                <th>Latencia</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaPaquetes"></tbody>
+                    </table>
                 </div>
-
-
-                <div class="campo">
-
-                    <label for="ruido">
-                        Ruido (%)
-                    </label>
-
-                    <input
-                        type="number"
-                        id="ruido"
-                        value="5"
-                        min="0"
-                        max="100"
-                    >
-
+            </section>
+ 
+            <section class="panel">
+                <h2>Resultados</h2>
+ 
+                <div class="metricas-grid">
+                    <div class="metrica"><span>Enviados</span><strong id="mEnviados">0</strong></div>
+                    <div class="metrica"><span>Correctos</span><strong id="mCorrectos">0</strong></div>
+                    <div class="metrica"><span>Perdidos</span><strong id="mPerdidos">0</strong></div>
+                    <div class="metrica"><span>Rechazados (error detectado)</span><strong id="mRechazados">0</strong></div>
+                    <div class="metrica"><span>Errores no detectados</span><strong id="mNoDetectados">0</strong></div>
+                    <div class="metrica"><span>BER</span><strong id="mBer">0</strong></div>
+                    <div class="metrica"><span>Latencia promedio</span><strong id="mLatencia">0 ms</strong></div>
+                    <div class="metrica"><span>Tasa de entrega correcta</span><strong id="mTasaEntrega">0 %</strong></div>
+                    <div class="metrica"><span>Eficiencia de trama (útiles / transmitidos)</span><strong id="mEficiencia">0 %</strong></div>
                 </div>
-
-
-                <div class="campo">
-
-                    <label for="latencia">
-                        Latencia (ms)
-                    </label>
-
-                    <input
-                        type="number"
-                        id="latencia"
-                        value="100"
-                        min="0"
-                >
-
-                </div>
-
-
-                <div class="campo">
-
-                    <label for="modulacion">
-                        Modulación
-                    </label>
-
-                    <select id="modulacion">
-
-                        <option value="ASK">
-                            ASK
-                        </option>
-
-                        <option value="FSK">
-                            FSK
-                        </option>
-
-                        <option value="PSK">
-                            PSK
-                        </option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-
-            <button
-                id="btnSimular"
-                class="btn-principal"
-            >
-                ▶ Iniciar simulación
-            </button>
-
-        </section>
-
-
+            </section>
+ 
+            <section class="panel">
+                <h2>Recomendación del sistema</h2>
+                <div id="recomendacion">Ejecutá una simulación para obtener una recomendación.</div>
+            </section>
+ 
+        </div>
+ 
+ 
         <!-- ==================================================
-             TRANSMISIÓN
+             MODO 2: CONTACTLESS ISO/IEC 14443-A
         =================================================== -->
-
-        <section class="panel">
-
-            <h2>Transmisión</h2>
-
-
-            <div class="transmision">
-
-                <div class="nodo">
-
-                    <span class="icono">
-                        📤
-                    </span>
-
-                    <strong>
-                        EMISOR
-                    </strong>
-
-                    <span id="mensajeEmisor">
-                        —
-                    </span>
-
+ 
+        <div id="modoContactless" class="oculto">
+ 
+            <section class="panel">
+                <h2>Configuración del escenario contactless</h2>
+ 
+                <div class="form-grid">
+ 
+                    <div class="campo">
+                        <label for="cPreset">Trama de ejemplo</label>
+                        <select id="cPreset">
+                            <option value="reqa">REQA (26, trama corta)</option>
+                            <option value="wupa">WUPA (52, trama corta)</option>
+                            <option value="anticol">Anticolisión CL1 (93 20)</option>
+                            <option value="hlta" selected>HLTA (50 00 + CRC_A)</option>
+                            <option value="atqa">ATQA de ejemplo (04 00, tarjeta → lector)</option>
+                            <option value="custom">Personalizada</option>
+                        </select>
+                    </div>
+ 
+                    <div class="campo">
+                        <label for="cDatos">Bytes de datos (hexadecimal)</label>
+                        <input type="text" id="cDatos" value="50 00">
+                    </div>
+ 
+                    <div class="campo">
+                        <label for="cTipoTrama">Tipo de trama</label>
+                        <select id="cTipoTrama">
+                            <option value="corta">Corta (7 bits, sin paridad ni CRC)</option>
+                            <option value="estandar" selected>Estándar (bytes + paridad)</option>
+                        </select>
+                    </div>
+ 
+                    <div class="campo">
+                        <label for="cControl">Control de integridad</label>
+                        <select id="cControl">
+                            <option value="ninguno">Sin control</option>
+                            <option value="paridad">Solo paridad por byte</option>
+                            <option value="paridad+crc" selected>Paridad + CRC_A</option>
+                        </select>
+                    </div>
+ 
+                    <div class="campo">
+                        <label for="cDireccion">Sentido de la comunicación</label>
+                        <select id="cDireccion">
+                            <option value="lector-tarjeta" selected>Lector → tarjeta (Miller modificado, ASK 100 %)</option>
+                            <option value="tarjeta-lector">Tarjeta → lector (Manchester, subportadora 847 kHz)</option>
+                        </select>
+                    </div>
+ 
+                    <div class="campo">
+                        <label for="cCanal">Modelo de canal</label>
+                        <select id="cCanal">
+                            <option value="ideal">Ideal (sin perturbaciones)</option>
+                            <option value="bsc">Nivel 1: canal binario simétrico (probabilidad p)</option>
+                            <option value="awgn" selected>Nivel 2: ruido gaussiano aditivo</option>
+                        </select>
+                    </div>
+ 
+                    <div class="campo oculto" id="campoP">
+                        <label for="cP">Probabilidad de error de bit p (%)</label>
+                        <input type="number" id="cP" value="1" min="0" max="100" step="0.1">
+                    </div>
+ 
+                    <div class="campo" id="campoSigma">
+                        <label for="cSigma">Ruido: desviación estándar σ (amplitud de la señal = 1)</label>
+                        <input type="number" id="cSigma" value="0.8" min="0" max="10" step="0.1">
+                    </div>
+ 
+                    <div class="campo" id="campoDistancia">
+                        <label for="cDistancia">Distancia (cm, opcional): atenuación (1/d)³</label>
+                        <input type="number" id="cDistancia" value="1" min="1" max="20" step="0.5">
+                    </div>
+ 
+                    <div class="campo">
+                        <label for="cRepeticiones">Repeticiones para las estadísticas</label>
+                        <input type="number" id="cRepeticiones" value="1000" min="1" max="20000">
+                    </div>
+ 
                 </div>
-
-
-                <div class="flecha">
-                    →
+ 
+                <div class="botones-fila">
+                    <button id="btnContactless" class="btn-principal">▶ Simular transmisión</button>
+                    <button id="btnComparar" class="btn-secundario">Comparar controles de integridad</button>
                 </div>
-
-
-                <div class="nodo">
-
-                    <span class="icono">
-                        📡
-                    </span>
-
-                    <strong>
-                        CANAL
-                    </strong>
-
-                    <span>
-                        Simulación
-                    </span>
-
+ 
+                <p class="nota">Simplificaciones: sincronización ideal del receptor, forma de onda a nivel de envolvente y modelo de atenuación cualitativo. Los parámetros del estándar deben verificarse contra ISO/IEC 14443-2 y -3.</p>
+            </section>
+ 
+            <section class="panel">
+                <h2>Una transmisión en detalle</h2>
+ 
+                <div class="resultado-linea"><span class="etiqueta">Bits transmitidos:</span></div>
+                <div class="bits-caja" id="cBitsTx">—</div>
+ 
+                <div class="resultado-linea"><span class="etiqueta">Bits recibidos:</span> (en rojo, los alterados por el canal)</div>
+                <div class="bits-caja" id="cBitsRx">—</div>
+ 
+                <div class="resultado-linea"><span class="etiqueta">Bytes recuperados:</span><span id="cBytes" class="mono">—</span></div>
+                <div class="resultado-linea"><span class="etiqueta">Bits erróneos:</span><span id="cErroresBits">—</span></div>
+                <div class="resultado-linea"><span class="etiqueta">Control CRC_A:</span><span id="cCrc">—</span></div>
+                <div class="resultado-linea"><span class="etiqueta">Resultado:</span><span id="cEstado">—</span></div>
+                <div class="resultado-linea"><span class="etiqueta">Duración:</span><span id="cTiempo">—</span></div>
+ 
+                <h3 id="cTituloOnda">Señal transmitida</h3>
+                <div class="scroll-x"><canvas id="canvasTx"></canvas></div>
+ 
+                <h3 id="cTituloOndaRx">Señal recibida</h3>
+                <div class="scroll-x"><canvas id="canvasRx"></canvas></div>
+                <p class="nota">Nivel alto = campo del lector (o subportadora de la tarjeta) presente; nivel bajo = pausa o silencio. Las letras indican el símbolo: X, Y, Z (Miller) o D, E, F (Manchester).</p>
+            </section>
+ 
+            <section class="panel">
+                <h2>Estadísticas con muchas repeticiones</h2>
+ 
+                <div class="metricas-grid">
+                    <div class="metrica"><span>Repeticiones</span><strong id="cmRepeticiones">0</strong></div>
+                    <div class="metrica"><span>Bits por trama</span><strong id="cmBitsTrama">0</strong></div>
+                    <div class="metrica"><span>BER</span><strong id="cmBer">0</strong></div>
+                    <div class="metrica"><span>Eficiencia de trama</span><strong id="cmEficiencia">0 %</strong></div>
+                    <div class="metrica"><span>Tramas aceptadas</span><strong id="cmAceptadas">0 %</strong></div>
+                    <div class="metrica"><span>Tramas rechazadas</span><strong id="cmRechazadas">0 %</strong></div>
+                    <div class="metrica"><span>Aceptadas con errores (no detectados)</span><strong id="cmNoDetectadas">0</strong></div>
+                    <div class="metrica"><span>Trama sin errores (solo canal nivel 1)</span><strong id="cmTeorica" style="font-size:14px">—</strong></div>
                 </div>
-
-
-                <div class="flecha">
-                    →
+ 
+                <h3>Comparación de controles de integridad</h3>
+                <div class="tabla-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Configuración</th>
+                                <th>Bits por trama</th>
+                                <th>Eficiencia</th>
+                                <th>BER</th>
+                                <th>Aceptadas</th>
+                                <th>Rechazadas</th>
+                                <th>No detectados</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaComparacion"></tbody>
+                    </table>
                 </div>
-
-
-                <div class="nodo">
-
-                    <span class="icono">
-                        📥
-                    </span>
-
-                    <strong>
-                        RECEPTOR
-                    </strong>
-
-                    <span id="mensajeReceptor">
-                        —
-                    </span>
-
+            </section>
+ 
+            <section class="panel">
+                <h2>Capturas reales (hardware)</h2>
+                <p class="nota">Pegá la salida del Monitor Serie del Arduino con el lector RC522 (formato <span class="mono">evento,datos,tiempo_us</span>). El simulador resume los tiempos y puede armar la trama SELECT con el UID capturado para recalcular su CRC_A.</p>
+ 
+                <div class="campo">
+                    <label for="capturaTexto">Datos capturados</label>
+                    <textarea id="capturaTexto" rows="6" placeholder="evento,datos,tiempo_us&#10;WUPA->ATQA,04 00,1180&#10;UID,12 34 56 78,2300&#10;SAK,08,"></textarea>
                 </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             PAQUETES
-        =================================================== -->
-
-        <section class="panel">
-
-            <h2>
-                Paquetes transmitidos
-            </h2>
-
-
-            <div class="tabla-container">
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-
-                            <th>ID</th>
-
-                            <th>Secuencia</th>
-
-                            <th>Datos</th>
-
-                            <th>Tamaño</th>
-
-                            <th>Estado</th>
-
-                            <th>Error</th>
-
-                            <th>Latencia</th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody id="tablaPaquetes">
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             MÉTRICAS
-        =================================================== -->
-
-        <section class="panel">
-
-            <h2>
-                Resultados
-            </h2>
-
-
-            <div class="metricas-grid">
-
-                <div class="metrica">
-
-                    <span>
-                        Enviados
-                    </span>
-
-                    <strong id="mEnviados">
-                        0
-                    </strong>
-
+ 
+                <div class="botones-fila">
+                    <button id="btnAnalizarCaptura" class="btn-secundario">Analizar capturas</button>
+                    <button id="btnArmarSelect" class="btn-secundario" disabled>Armar SELECT con el UID capturado</button>
                 </div>
-
-
-                <div class="metrica">
-
-                    <span>
-                        Recibidos
-                    </span>
-
-                    <strong id="mRecibidos">
-                        0
-                    </strong>
-
-                </div>
-
-
-                <div class="metrica">
-
-                    <span>
-                        Perdidos
-                    </span>
-
-                    <strong id="mPerdidos">
-                        0
-                    </strong>
-
-                </div>
-
-
-                <div class="metrica">
-
-                    <span>
-                        Errores
-                    </span>
-
-                    <strong id="mErrores">
-                        0
-                    </strong>
-
-                </div>
-
-
-                <div class="metrica">
-
-                    <span>
-                        BER
-                    </span>
-
-                    <strong id="mBer">
-                        0
-                    </strong>
-
-                </div>
-
-
-                <div class="metrica">
-
-                    <span>
-                        Latencia promedio
-                    </span>
-
-                    <strong id="mLatencia">
-                        0 ms
-                    </strong>
-
-                </div>
-
-
-                <div class="metrica">
-
-                    <span>
-                        Eficiencia
-                    </span>
-
-                    <strong id="mEficiencia">
-                        0 %
-                    </strong>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ==================================================
-             RECOMENDACIÓN
-        =================================================== -->
-
-        <section class="panel">
-
-            <h2>
-                🧠 Recomendación del sistema
-            </h2>
-
-            <div id="recomendacion">
-
-                Ejecutá una simulación para obtener una recomendación.
-
-            </div>
-
-        </section>
-
+ 
+                <div id="capturaResumen" class="resultado-linea"></div>
+            </section>
+ 
+        </div>
+ 
     </main>
-
-
+ 
+ 
     <footer>
-
-        <p>
-            Simulador de Comunicación de Datos — Proyecto académico
-        </p>
-
+        <p>Simulador de Comunicación de Datos — Trabajo Final Integrador</p>
     </footer>
-
-
-    <!-- ======================================================
-         JAVASCRIPT
-    ======================================================= -->
-
+ 
+ 
+    <!-- JAVASCRIPT -->
     <script src="js/packets.js"></script>
-
     <script src="js/channel.js"></script>
-
     <script src="js/errors.js"></script>
-
     <script src="js/modulation.js"></script>
-
     <script src="js/metrics.js"></script>
-
     <script src="js/intelligent.js"></script>
-
+    <script src="js/contactless.js"></script>
+    <script src="js/waveform.js"></script>
     <script src="js/main.js"></script>
-
+ 
 </body>
-
+ 
 </html>
